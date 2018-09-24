@@ -10,5 +10,5 @@
 #SBATCH --export=ALL
 module load intel
 ulimit -c unlimited -s
-./cnn_par 128 3 64 112 112 3 3 2 2
-./cnn_par 128 832 128 7 7 1 1 1 1
+./cnn9.out 128 3 64 112 112 3 3 2 2
+./cnn9.out 128 832 128 7 7 1 1 1 1
