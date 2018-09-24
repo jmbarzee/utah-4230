@@ -111,6 +111,7 @@ int main(int argc, char *argv[])
   { // minibatch size
     for (k = 0; k < K; k++)
     { // output feature map
+      #pragma omp parallel for	
       for (c = 0; c < C; c++)
       { // input feature map
         for (p = 0; p < P; p++)
