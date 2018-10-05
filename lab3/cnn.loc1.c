@@ -115,6 +115,8 @@ int main(int argc, char *argv[])
 
   int qTile = 8;
   int qq = 0;
+  int pTile = 8;
+  int pp = 0;
 
 // PARALLEL CALCULATION
   double par_start = omp_get_wtime();
@@ -128,14 +130,18 @@ int main(int argc, char *argv[])
         { // filter height
           for (s = 0; s < S; s++)
           { // filter width
-            for (p = 0; p < P; p++)
+            for (pp = 0; pp < P; pp+=pTile)
             {             // output height
-              ij = p * u; // input height
-              for (qq = 0; qq < Q; qq+=qTile)
-              {             // output width
-                for (q=0; q < min(qq+qTile, Q); q++) {
-                  ii = q * v; // input width
-                  output_par[n][k][p][q] += input[n][c][ij + r][ii + s] * weight[k][c][r][s];
+              for (p=pp; p < min(p+pTile, P); p++)
+              {
+                ij = p * u; // input height
+                for (qq = 0; qq < Q; qq+=qTile)
+                {             // output width
+                  for (q=qq; q < min(qq+qTile, Q); q++)
+                  {
+                    ii = q * v; // input width
+                    output_par[n][k][p][q] += input[n][c][ij + r][ii + s] * weight[k][c][r][s];
+                  }
                 }
               }
             }
