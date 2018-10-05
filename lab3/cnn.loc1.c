@@ -114,6 +114,7 @@ int main(int argc, char *argv[])
   double seq_time = seq_end - seq_start;
 
   int qTile = 8;
+  int qq = 0;
 
 // PARALLEL CALCULATION
   double par_start = omp_get_wtime();
@@ -130,7 +131,7 @@ int main(int argc, char *argv[])
             for (p = 0; p < P; p++)
             {             // output height
               ij = p * u; // input height
-              for (int qq = 0; qq < Q; qq+=qTile)
+              for (qq = 0; qq < Q; qq+=qTile)
               {             // output width
                 for (q=0; q < min(qq+qTile, Q); q++) {
                   ii = q * v; // input width
