@@ -18,6 +18,14 @@
    number of threads
 */
 
+int min(int a, int b) {
+  if (a < b) {
+    return a
+  } else {
+    return b
+  }
+}
+
 int main(int argc, char *argv[])
 {
   int n, k, c, p, q, r, s, ii, ij;
@@ -105,6 +113,8 @@ int main(int argc, char *argv[])
   double seq_end = omp_get_wtime();
   double seq_time = seq_end - seq_start;
 
+  int qTile = 8
+
 // PARALLEL CALCULATION
   double par_start = omp_get_wtime();
   for (n = 0; n < N; n++)
@@ -113,17 +123,19 @@ int main(int argc, char *argv[])
     { // output feature map
       for (c = 0; c < C; c++)
       { // input feature map
-        for (p = 0; p < P; p++)
-        {             // output height
-          ij = p * u; // input height
-          for (q = 0; q < Q; q++)
-          {             // output width
-            ii = q * v; // input width
-            for (r = 0; r < R; r++)
-            { // filter height
-              for (s = 0; s < S; s++)
-              { // filter width
-                output_par[n][k][p][q] += input[n][c][ij + r][ii + s] * weight[k][c][r][s];
+        for (r = 0; r < R; r++)
+        { // filter height
+          for (s = 0; s < S; s++)
+          { // filter width
+            for (p = 0; p < P; p++)
+            {             // output height
+              ij = p * u; // input height
+              for (qq = 0; qq < Q; qq+=qTile)
+              {             // output width
+                for (q=0; q < min(qq+qTile, Q); q++) {
+                  ii = q * v; // input width
+                  output_par[n][k][p][q] += input[n][c][ij + r][ii + s] * weight[k][c][r][s];
+                }
               }
             }
           }
