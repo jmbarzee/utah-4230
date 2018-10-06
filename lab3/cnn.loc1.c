@@ -130,16 +130,16 @@ int main(int argc, char *argv[])
         { // TILED
           for (qq = 0; qq < Q; qq+=qTile)
           { // TILED
-            for (r = 0; r < R; r++)
-            { // filter height
-              for (s = 0; s < S; s++)
-              { // filter width
-                for (p=pp; p < min(p+pTile, P); p++)
-                { // output height
-                  ij = p * u; // input height
-                  for (q=qq; q < min(qq+qTile, Q); q++)
-                  { // output width
-                    ii = q * v; // input width
+            for (p=pp; p < min(pp+pTile, P); p++)
+            { // output height
+              ij = p * u; // input height
+              for (q=qq; q < min(qq+qTile, Q); q++)
+              { // output width
+                ii = q * v; // input width
+                for (r = 0; r < R; r++)
+                { // filter height
+                  for (s = 0; s < S; s++)
+                  { // filter width
                     output_par[n][k][p][q] += input[n][c][ij + r][ii + s] * weight[k][c][r][s];
                   }
                 }
