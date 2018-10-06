@@ -113,10 +113,8 @@ int main(int argc, char *argv[])
   double seq_end = omp_get_wtime();
   double seq_time = seq_end - seq_start;
 
-  int qTile = 8;
+  int qTile = 16;
   int qq = 0;
-  int pTile = 8;
-  int pp = 0;
 
 // PARALLEL CALCULATION
   double par_start = omp_get_wtime();
@@ -126,24 +124,23 @@ int main(int argc, char *argv[])
     { // output feature map
       for (c = 0; c < C; c++)
       { // input feature map
-        for (pp = 0; pp < P; pp+=pTile)
-        { // TILED
+        for (p=0; p < P); p++)
+        { // output height
+          ij = p * u; // input height
           for (qq = 0; qq < Q; qq+=qTile)
           { // TILED
-            for (p=pp; p < min(pp+pTile, P); p++)
-            { // output height
-              ij = p * u; // input height
-              for (q=qq; q < min(qq+qTile, Q); q++)
-              { // output width
-                ii = q * v; // input width
-                for (r = 0; r < R; r++)
-                { // filter height
-                  for (s = 0; s < S; s++)
-                  { // filter width
-                    output_par[n][k][p][q] += input[n][c][ij + r][ii + s] * weight[k][c][r][s];
-                  }
+            for (q=qq; q < min(qq+qTile, Q); q++)
+            { // output width
+              ii = q * v; // input width
+              float out = 0;
+              for (r = 0; r < R; r++)
+              { // filter height
+                for (s = 0; s < S; s++)
+                { // filter width
+                  out += input[n][c][ij + r][ii + s] * weight[k][c][r][s];
                 }
               }
+              output_par[n][k][p][q] += out;
             }
           }
         }
