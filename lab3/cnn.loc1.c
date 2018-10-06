@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
     { // output feature map
       for (c = 0; c < C; c++)
       { // input feature map
-        for (p=0; p < P); p++)
+        for (p=0; p < P; p++)
         { // output height
           ij = p * u; // input height
           for (qq = 0; qq < Q; qq+=qTile)
