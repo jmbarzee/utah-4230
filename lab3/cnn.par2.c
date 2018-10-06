@@ -105,26 +105,44 @@ int main(int argc, char *argv[])
   double seq_end = omp_get_wtime();
   double seq_time = seq_end - seq_start;
 
+  int nTile = 8;
+  int nn = 0;
+  int kTile = 8;
+  int kk = 0;
+
+  float out = 0;
+
 // PARALLEL CALCULATION
   double par_start = omp_get_wtime();
-  for (n = 0; n < N; n++)
-  { // minibatch size
-    for (k = 0; k < K; k++)
-    { // output feature map
-      for (c = 0; c < C; c++)
-      { // input feature map
-        for (p = 0; p < P; p++)
-        {             // output height
-          ij = p * u; // input height
-          for (q = 0; q < Q; q++)
-          {             // output width
-            ii = q * v; // input width
-            for (r = 0; r < R; r++)
-            { // filter height
-              for (s = 0; s < S; s++)
-              { // filter width
-                output_par[n][k][p][q] += input[n][c][ij + r][ii + s] * weight[k][c][r][s];
+  for (nn = 0; nn < N; nn+=nTile)
+  {
+    for (kk = 0; kk < K; kk+=kTile)
+    {
+      for (n = nn; n < ((nn+nTile<N) ? nn+nTile : N); n++)
+      { // minibatch size
+        for (k = kk; k < ((kk+kTile<K) ? kk+kTile : K); k++)
+        { // output feature map
+          for (p = 0; p < P; p++)
+          {             // output height
+            ij = p * u; // input height
+            for (q = 0; q < Q; q++)
+            {             // output width
+              ii = q * v; // input width
+              out = 0;
+              #pragma omp parallel \
+                  for reduction(+:out) \
+                  private(c, r, s)
+              for (c = 0; c < C; c++)
+                { // input feature map
+                for (r = 0; r < R; r++)
+                { // filter height
+                  for (s = 0; s < S; s++)
+                  { // filter width
+                    out += input[n][c][ij + r][ii + s] * weight[k][c][r][s];
+                  }
+                }
               }
+              output_par[n][k][p][q] += out;
             }
           }
         }
