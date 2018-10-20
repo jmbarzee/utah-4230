@@ -120,6 +120,7 @@ int main(int argc, char *argv[])
         for (q = 0; q < Q; q++)
         {             // output width
           ii = q * v; // input width
+          float sum = 0;
           for (r = 0; r < R; r++)
           { // filter height
             for (s = 0; s < S; s++)
@@ -127,11 +128,12 @@ int main(int argc, char *argv[])
               for (cc = 0; cc < C; cc+=cTile)
               { // input feature map
                 for (c = cc; c < ((cc+cTile < C) ? cc+cTile : C); c++) {
-                  output_par[n][k][p][q] += input[n][ij + r][ii + s][c] * weight[k][r][s][c];
+                  sum += input[n][ij + r][ii + s][c] * weight[k][r][s][c];
                 }
               }
             }
           }
+          output_par[n][k][p][q] = sum;
         }
       }
     }
