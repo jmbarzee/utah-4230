@@ -44,19 +44,19 @@ int main(int argc, char *argv[])
   memset(output_seq, 0.0, 128 * 128 * 55 * 55 * sizeof(float));
   float output_par[128][128][55][55];
   memset(output_par, 0.0, 128 * 128 * 55 * 55 * sizeof(float));
-  float input[128][832][112][112];
-  float weight[128][832][3][3];
+  float input[128][112][112][832];
+  float weight[128][3][3][832];
 
   // ASSIGN INITIAL VALUES FOR INPUT AND WEIGHT
   for (n = 0; n < N; n++)
   {
-    for (c = 0; c < C; c++)
+    for (p = 0; p < (P - 1) * u + R; p++)
     {
-      for (p = 0; p < (P - 1) * u + R; p++)
+      for (q = 0; q < (Q - 1) * v + S; q++)
       {
-        for (q = 0; q < (Q - 1) * v + S; q++)
+        for (c = 0; c < C; c++)
         {
-          input[n][c][p][q] = ((float)(n + c + p + q) / 7);
+          input[n][p][q][c] = ((float)(n + c + p + q) / 7);
         }
       }
     }
@@ -64,13 +64,13 @@ int main(int argc, char *argv[])
 
   for (k = 0; k < K; k++)
   {
-    for (c = 0; c < C; c++)
+    for (r = 0; r < R; r++)
     {
-      for (r = 0; r < R; r++)
+      for (s = 0; s < S; s++)
       {
-        for (s = 0; s < S; s++)
+        for (c = 0; c < C; c++)
         {
-          weight[k][c][r][s] = ((float)(k + c + r + s) / 11);
+          weight[k][r][s][c] = ((float)(k + c + r + s) / 11);
         }
       }
     }
@@ -82,19 +82,19 @@ int main(int argc, char *argv[])
   { // minibatch size
     for (k = 0; k < K; k++)
     { // output feature map
-      for (c = 0; c < C; c++)
-      { // input feature map
-        for (p = 0; p < P; p++)
-        {             // output height
-          ij = p * u; // input height
-          for (q = 0; q < Q; q++)
-          {             // output width
-            ii = q * v; // input width
-            for (r = 0; r < R; r++)
-            { // filter height
-              for (s = 0; s < S; s++)
-              { // filter width
-                output_seq[n][k][p][q] += input[n][c][ij + r][ii + s] * weight[k][c][r][s];
+      for (p = 0; p < P; p++)
+      {             // output height
+        ij = p * u; // input height
+        for (q = 0; q < Q; q++)
+        {             // output width
+          ii = q * v; // input width
+          for (r = 0; r < R; r++)
+          { // filter height
+            for (s = 0; s < S; s++)
+            { // filter width
+              for (c = 0; c < C; c++)
+              { // input feature map
+                output_seq[n][k][p][q] += input[n][ij + r][ii + s][c] * weight[k][r][s][c];
               }
             }
           }
@@ -111,19 +111,19 @@ int main(int argc, char *argv[])
   { // minibatch size
     for (k = 0; k < K; k++)
     { // output feature map
-      for (c = 0; c < C; c++)
-      { // input feature map
-        for (p = 0; p < P; p++)
-        {             // output height
-          ij = p * u; // input height
-          for (q = 0; q < Q; q++)
-          {             // output width
-            ii = q * v; // input width
-            for (r = 0; r < R; r++)
-            { // filter height
-              for (s = 0; s < S; s++)
-              { // filter width
-                output_par[n][k][p][q] += input[n][c][ij + r][ii + s] * weight[k][c][r][s];
+      for (p = 0; p < P; p++)
+      {             // output height
+        ij = p * u; // input height
+        for (q = 0; q < Q; q++)
+        {             // output width
+          ii = q * v; // input width
+          for (r = 0; r < R; r++)
+          { // filter height
+            for (s = 0; s < S; s++)
+            { // filter width
+              for (c = 0; c < C; c++)
+              { // input feature map
+                output_seq[n][k][p][q] += input[n][ij + r][ii + s][c] * weight[k][r][s][c];
               }
             }
           }
@@ -139,17 +139,14 @@ int main(int argc, char *argv[])
   { // minibatch size
     for (k = 0; k < K; k++)
     { // output feature map
-      for (c = 0; c < C; c++)
-      { // input feature map
-        for (p = 0; p < P; p++)
-        { // output height
-          for (q = 0; q < Q; q++)
-          { // output width
-            if (abs(output_seq[n][k][p][q] - output_par[n][k][p][q]) > .0001)
-            {
-              printf("Outputs do not match!!!\n");
-              exit(2);
-            }
+      for (p = 0; p < P; p++)
+      { // output height
+        for (q = 0; q < Q; q++)
+        { // output width
+          if (abs(output_seq[n][k][p][q] - output_par[n][k][p][q]) > .0001)
+          {
+            printf("Outputs do not match!!!\n");
+            exit(2);
           }
         }
       }
