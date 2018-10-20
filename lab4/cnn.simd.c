@@ -127,6 +127,7 @@ int main(int argc, char *argv[])
             { // filter width
               for (cc = 0; cc < C; cc+=cTile)
               { // input feature map
+                #pragma omp simd
                 for (c = cc; c < ((cc+cTile < C) ? cc+cTile : C); c++) {
                   sum += input[n][ij + r][ii + s][c] * weight[k][r][s][c];
                 }
