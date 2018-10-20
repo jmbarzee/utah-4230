@@ -105,6 +105,9 @@ int main(int argc, char *argv[])
   double seq_end = omp_get_wtime();
   double seq_time = seq_end - seq_start;
 
+  int cc = 0;
+  int cTile = 16;
+
 // PARALLEL CALCULATION
   double par_start = omp_get_wtime();
   for (n = 0; n < N; n++)
@@ -121,9 +124,11 @@ int main(int argc, char *argv[])
           { // filter height
             for (s = 0; s < S; s++)
             { // filter width
-              for (c = 0; c < C; c++)
+              for (cc = 0; cc < C; cc+=cTile)
               { // input feature map
-                output_par[n][k][p][q] += input[n][ij + r][ii + s][c] * weight[k][r][s][c];
+                for (c = cc; c < ((cc+cTile < C) ? cc+cTile : C); c++) {
+                  output_par[n][k][p][q] += input[n][ij + r][ii + s][c] * weight[k][r][s][c];
+                }
               }
             }
           }
