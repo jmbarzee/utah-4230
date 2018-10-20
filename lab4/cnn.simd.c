@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
             { // filter width
               for (c = 0; c < C; c++)
               { // input feature map
-                output_seq[n][k][p][q] += input[n][ij + r][ii + s][c] * weight[k][r][s][c];
+                output_par[n][k][p][q] += input[n][ij + r][ii + s][c] * weight[k][r][s][c];
               }
             }
           }
@@ -139,14 +139,17 @@ int main(int argc, char *argv[])
   { // minibatch size
     for (k = 0; k < K; k++)
     { // output feature map
-      for (p = 0; p < P; p++)
-      { // output height
-        for (q = 0; q < Q; q++)
-        { // output width
-          if (abs(output_seq[n][k][p][q] - output_par[n][k][p][q]) > .0001)
-          {
-            printf("Outputs do not match!!!\n");
-            exit(2);
+      for (c = 0; c < C; c++)
+      { // input feature map
+        for (p = 0; p < P; p++)
+        { // output height
+          for (q = 0; q < Q; q++)
+          { // output width
+            if (abs(output_seq[n][k][p][q] - output_par[n][k][p][q]) > .0001)
+            {
+              printf("Outputs do not match!!!\n");
+              exit(2);
+            }
           }
         }
       }
