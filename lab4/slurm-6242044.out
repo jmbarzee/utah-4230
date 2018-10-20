@@ -1,0 +1,3 @@
+stack size              (kbytes, -s) unlimited
+Sequential time = 8.664397, Parallel time = 7.304771, Speedup = 1.186128
+Sequential time = 5.602382, Parallel time = 3.751815, Speedup = 1.493246
