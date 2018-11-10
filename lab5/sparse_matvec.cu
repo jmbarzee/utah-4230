@@ -76,6 +76,8 @@ main(int argc, char **argv)
   // create CUDA event handles for timing purposes
   // cudaEvent_t start_event, stop_event;
   float elapsed_time_cpu, elapsed_time_gpu;
+  elapsed_time_cpu = 0;
+  elapsed_time_gpu = 0;
 
 
   // Main Computation, CPU version
