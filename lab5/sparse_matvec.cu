@@ -11,6 +11,30 @@ int compare(float *a, float *b, int size, double threshold)
   return 1;
 }
 
+void computeCPU(int nr, int *ptr, int *indices, float *b, float *data, float *tcpu)
+{
+  int i, j;
+  for (i = 0; i < nr; i++)
+  {
+    for (j = ptr[i]; j < ptr[i + 1]; j++)
+    {
+      tcpu[i] = tcpu[i] + data[j] * b[indices[j]];
+    }
+  }
+}
+
+void computeGPU(int nr, int *ptr, int *indices, float *b, float *data, float *tgpu)
+{
+  int i, j;
+  for (i = 0; i < nr; i++)
+  {
+    for (j = ptr[i]; j < ptr[i + 1]; j++)
+    {
+      tgpu[i] = tgpu[i] + data[j] * b[indices[j]];
+    }
+  }
+}
+
 main(int argc, char **argv)
 {
   FILE *fp;
@@ -84,24 +108,11 @@ main(int argc, char **argv)
   elapsed_time_cpu = 0;
   elapsed_time_gpu = 0;
 
-
   // Main Computation, CPU version
-  for (i = 0; i < nr; i++)
-  {
-    for (j = ptr[i]; j < ptr[i + 1]; j++)
-    {
-      tcpu[i] = tcpu[i] + data[j] * b[indices[j]];
-    }
-  }
+  computeCPU(nr, ptr, indices, b, data, tcpu);
 
   // Main Computation, GPU version
-  for (i = 0; i < nr; i++)
-  {
-    for (j = ptr[i]; j < ptr[i + 1]; j++)
-    {
-      tgpu[i] = tgpu[i] + data[j] * b[indices[j]];
-    }
-  }
+  computeGPU(nr, ptr, indices, b, data, tgpu);
 
   // Compare computations to ensure correctness of gpu
   int res = compare(tcpu, tgpu, nr, 0.001);
