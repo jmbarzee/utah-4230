@@ -1,5 +1,16 @@
 #include <stdio.h>
 
+int compare(float *a, float *b, int size, double threshold)
+{
+  int i;
+  for (i = 0; i < size; i++)
+  {
+    if (abs(a[i] - b[i]) > threshold)
+      return 0;
+  }
+  return 1;
+}
+
 main(int argc, char **argv)
 {
   FILE *fp;
@@ -97,15 +108,4 @@ main(int argc, char **argv)
   }
 
   // TODO: Compute result on GPU and compare output
-}
-
-int compare(float *a, float *b, int size, double threshold)
-{
-  int i;
-  for (i = 0; i < size; i++)
-  {
-    if (abs(a[i] - b[i]) > threshold)
-      return 0;
-  }
-  return 1;
 }
