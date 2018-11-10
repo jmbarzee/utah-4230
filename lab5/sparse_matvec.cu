@@ -22,15 +22,20 @@ main(int argc, char **argv)
   int nr; // number of rows in matrix
   int nc; // number of columns in matrix
 
+  printf("Checking args\n");
   // Open input file and read to end of comments
   if (argc != 2)
+  {
     abort();
+  }
 
+  printf("Opening file\n");
   if ((fp = fopen(argv[1], "r")) == NULL)
   {
     abort();
   }
 
+  printf("skipping comments\n");
   fgets(line, 128, fp);
   while (line[0] == '%')
   {
