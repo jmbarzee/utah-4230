@@ -1,0 +1,15 @@
+Notes of what to change
+
+thread function
+allocate
+copy data
+dim grid
+dim block
+spmv <<< blocks, threads >>> (args)
+timer
+validation
+
+
+
+module load cuda
+INCLUDE=-I/usr/local/cuda/include 
