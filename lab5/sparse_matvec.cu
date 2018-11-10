@@ -1,5 +1,11 @@
 #include <stdio.h>
 
+extern int cudaMemcpy();
+extern int cudaFree();
+extern void __syncthreads();
+extern int cudaMemcpyToSymbol();
+void computeGPU(int nr, int *ptr, int *indices, float *b, float *data, float *tgpu);
+
 int compare(float *a, float *b, int size, double threshold)
 {
   int i;
@@ -41,25 +47,22 @@ main(int argc, char **argv)
   char line[1024];
   int *ptr, *indices;
   float *data, *b, *tcpu, *tgpu;
-  int i, j;
+  int i;
   int n;  // number of nonzero elements in data
   int nr; // number of rows in matrix
   int nc; // number of columns in matrix
 
-  printf("Checking args\n");
   // Open input file and read to end of comments
   if (argc != 2)
   {
     abort();
   }
 
-  printf("Opening file\n");
   if ((fp = fopen(argv[1], "r")) == NULL)
   {
     abort();
   }
 
-  printf("skipping comments\n");
   fgets(line, 128, fp);
   while (line[0] == '%')
   {
@@ -103,16 +106,28 @@ main(int argc, char **argv)
   }
 
   // create CUDA event handles for timing purposes
-  // cudaEvent_t start_event, stop_event;
+  cudaEvent_t start_event, stop_event;
   float elapsed_time_cpu, elapsed_time_gpu;
   elapsed_time_cpu = 0;
   elapsed_time_gpu = 0;
 
   // Main Computation, CPU version
+  cudaEventCreate(&start_event);
+  cudaEventCreate(&stop_event);
+  cudaEventRecord(start_event, 0);
   computeCPU(nr, ptr, indices, b, data, tcpu);
+  cudaEventRecord(stop_event, 0);
+  cudaEventSynchronize(stop_event);
+  cudaEventElapsedTime(&elapsed_time_cpu, start_event, stop_event);
 
   // Main Computation, GPU version
+  cudaEventCreate(&start_event);
+  cudaEventCreate(&stop_event);
+  cudaEventRecord(start_event, 0);
   computeGPU(nr, ptr, indices, b, data, tgpu);
+  cudaEventRecord(stop_event, 0);
+  cudaEventSynchronize(stop_event);
+  cudaEventElapsedTime(&elapsed_time_gpu, start_event, stop_event);
 
   // Compare computations to ensure correctness of gpu
   int res = compare(tcpu, tgpu, nr, 0.001);
