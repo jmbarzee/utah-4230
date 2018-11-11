@@ -143,8 +143,8 @@ main(int argc, char **argv)
   cudaMemcpy(devI2Ptr, indices, n * 4, cudaMemcpyHostToDevice);
   float *devI3Ptr;
   cudaMalloc((void **)&devI3Ptr, n * 4);
-  cudaMemcpy(devI3Ptr, b, n * 4, cudaMemcpyHostToDevice);
   return 0;
+  cudaMemcpy(devI3Ptr, b, n * 4, cudaMemcpyHostToDevice);
   float *devI4Ptr;
   cudaMalloc((void **)&devI4Ptr, n * 4);
   cudaMemcpy(devI4Ptr, data, n * 4, cudaMemcpyHostToDevice);
