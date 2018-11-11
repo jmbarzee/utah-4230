@@ -32,11 +32,17 @@ void computeCPU(int nr, int *ptr, int *indices, double *b, double *data, double 
 extern __global__ void computeGPU(int nr, int *ptr, int *indices, double *b, double *data, double *tgpu)
 {
   int i, j;
+  int bx = blockIdx.x;
+  int tx = threadIdx.x;
+  //double tgpucpy;
+  __shared__ double bcpy[32];
+
   for (i = 0; i < nr; i++)
   {
+    bcpy[tx] = b[blockDim.x * i + tx];
     for (j = ptr[i]; j < ptr[i + 1]; j++)
     {
-      tgpu[i] = tgpu[i] + data[j] * b[indices[j]];
+      tgpu[i] = tgpu[i] + data[j] * bcpy[indices[j]];
     }
   }
 }
