@@ -64,15 +64,15 @@ main(int argc, char **argv)
   {
     printf("File Failed to open!\n");
   }
-  printf("Returning\n");
-  return;
 
+  printf("Skipping comments\n");
   fgets(line, 128, fp);
   while (line[0] == '%')
   {
     fgets(line, 128, fp);
   }
 
+  printf("Allocating sparse Array\n");
   // Read number of rows (nr), number of columns (nc) and
   // number of elements and allocate memory for ptr, indices, data, b and t.
   sscanf(line, "%d %d %d\n", &nr, &nc, &n);
@@ -83,6 +83,7 @@ main(int argc, char **argv)
   tcpu = (float *)malloc(nr * sizeof(float));
   tgpu = (float *)malloc(nr * sizeof(float));
 
+  printf("Reading Sparse Array\n");
   // Read data in coordinate format and initialize sparse matrix
   int lastr = 0;
   for (i = 0; i < n; i++)
@@ -98,6 +99,7 @@ main(int argc, char **argv)
   }
   ptr[nr] = n;
 
+  printf("Filling t with 0 and b with random shit\n");
   // initialize t to 0 and b with random data
   for (i = 0; i < nr; i++)
   {
@@ -109,12 +111,14 @@ main(int argc, char **argv)
     b[i] = (float)rand() / 1111111111;
   }
 
+  printf("Setup Timing\n");
   // create CUDA event handles for timing purposes
   cudaEvent_t start_event, stop_event;
   float elapsed_time_cpu, elapsed_time_gpu;
   elapsed_time_cpu = 0;
   elapsed_time_gpu = 0;
 
+  printf("Run CPU comp\n");
   // Main Computation, CPU version
   cudaEventCreate(&start_event);
   cudaEventCreate(&stop_event);
@@ -124,6 +128,7 @@ main(int argc, char **argv)
   cudaEventSynchronize(stop_event);
   cudaEventElapsedTime(&elapsed_time_cpu, start_event, stop_event);
 
+  printf("Setup GPU (copies)\n");
   // outputs
   float *devO1Ptr;
   cudaMalloc((void **)&devO1Ptr, nr * 4);
@@ -145,6 +150,7 @@ main(int argc, char **argv)
   dim3 dimGrid((n + 31) / 32, 1);
   dim3 dimBlock(32, 1);
 
+  printf("Run GPU comp\n");
   // Main Computation, GPU version
   cudaEventCreate(&start_event);
   cudaEventCreate(&stop_event);
@@ -155,6 +161,7 @@ main(int argc, char **argv)
   cudaMemcpy(tgpu, devO1Ptr, nr * 4, cudaMemcpyDeviceToHost);
   cudaEventElapsedTime(&elapsed_time_gpu, start_event, stop_event);
 
+  printf("Comparing Results\n");
   // Compare computations to ensure correctness of gpu
   int res = compare(tcpu, tgpu, nr, 0.001);
   if (res == 1)
