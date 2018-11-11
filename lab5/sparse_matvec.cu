@@ -141,10 +141,10 @@ main(int argc, char **argv)
   int *devI2Ptr;
   cudaMalloc((void **)&devI2Ptr, n * 4);
   cudaMemcpy(devI2Ptr, indices, n * 4, cudaMemcpyHostToDevice);
-  return 0;
   float *devI3Ptr;
   cudaMalloc((void **)&devI3Ptr, n * 4);
   cudaMemcpy(devI3Ptr, b, n * 4, cudaMemcpyHostToDevice);
+  return 0;
   float *devI4Ptr;
   cudaMalloc((void **)&devI4Ptr, n * 4);
   cudaMemcpy(devI4Ptr, data, n * 4, cudaMemcpyHostToDevice);
