@@ -55,11 +55,13 @@ main(int argc, char **argv)
   // Open input file and read to end of comments
   if (argc != 2)
   {
+    printf("Not enough arguemnts!");
     abort();
   }
 
   if ((fp = fopen(argv[1], "r")) == NULL)
   {
+    printf("File Failed to open!");
     abort();
   }
 
