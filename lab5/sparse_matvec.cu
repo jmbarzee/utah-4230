@@ -114,7 +114,7 @@ main(int argc, char **argv)
   printf("Setup Timing\n");
   // create CUDA event handles for timing purposes
   cudaEvent_t start_event, stop_event;
-  double elapsed_time_cpu, elapsed_time_gpu;
+  float elapsed_time_cpu, elapsed_time_gpu;
   elapsed_time_cpu = 0;
   elapsed_time_gpu = 0;
 
