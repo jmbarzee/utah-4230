@@ -129,7 +129,6 @@ main(int argc, char **argv)
   cudaEventElapsedTime(&elapsed_time_cpu, start_event, stop_event);
 
 
-  return 0;
   printf("Setup GPU (copies)\n");
   // outputs
   float *devO1Ptr;
@@ -152,6 +151,7 @@ main(int argc, char **argv)
   dim3 dimGrid((n + 31) / 32, 1);
   dim3 dimBlock(32, 1);
 
+  return 0;
   printf("Run GPU comp\n");
   // Main Computation, GPU version
   cudaEventCreate(&start_event);
