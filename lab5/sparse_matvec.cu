@@ -4,9 +4,9 @@ extern int cudaMemcpy();
 extern int cudaFree();
 extern void __syncthreads();
 extern int cudaMemcpyToSymbol();
-extern __global__ void computeGPU(int nr, int *ptr, int *indices, float *b, float *data, float *tgpu);
+extern __global__ void computeGPU(int nr, int *ptr, int *indices, double *b, double *data, double *tgpu);
 
-int compare(float *a, float *b, int size, double threshold)
+int compare(double *a, double *b, int size, double threshold)
 {
   int i;
   for (i = 0; i < size; i++)
@@ -17,7 +17,7 @@ int compare(float *a, float *b, int size, double threshold)
   return 1;
 }
 
-void computeCPU(int nr, int *ptr, int *indices, float *b, float *data, float *tcpu)
+void computeCPU(int nr, int *ptr, int *indices, double *b, double *data, double *tcpu)
 {
   int i, j;
   for (i = 0; i < nr; i++)
@@ -29,7 +29,7 @@ void computeCPU(int nr, int *ptr, int *indices, float *b, float *data, float *tc
   }
 }
 
-extern __global__ void computeGPU(int nr, int *ptr, int *indices, float *b, float *data, float *tgpu)
+extern __global__ void computeGPU(int nr, int *ptr, int *indices, double *b, double *data, double *tgpu)
 {
   int i, j;
   for (i = 0; i < nr; i++)
@@ -46,7 +46,7 @@ main(int argc, char **argv)
   FILE *fp;
   char line[1024];
   int *ptr, *indices;
-  float *data, *b, *tcpu, *tgpu;
+  double *data, *b, *tcpu, *tgpu;
   int i;
   int n;  // number of nonzero elements in data
   int nr; // number of rows in matrix
@@ -78,10 +78,10 @@ main(int argc, char **argv)
   sscanf(line, "%d %d %d\n", &nr, &nc, &n);
   ptr = (int *)malloc((nr + 1) * sizeof(int));
   indices = (int *)malloc(n * sizeof(int));
-  data = (float *)malloc(n * sizeof(float));
-  b = (float *)malloc(nc * sizeof(float));
-  tcpu = (float *)malloc(nr * sizeof(float));
-  tgpu = (float *)malloc(nr * sizeof(float));
+  data = (double *)malloc(n * sizeof(double));
+  b = (double *)malloc(nc * sizeof(double));
+  tcpu = (double *)malloc(nr * sizeof(double));
+  tgpu = (double *)malloc(nr * sizeof(double));
 
   printf("Reading Sparse Array\n");
   // Read data in coordinate format and initialize sparse matrix
@@ -108,13 +108,13 @@ main(int argc, char **argv)
   }
   for (i = 0; i < nc; i++)
   {
-    b[i] = (float)rand() / 1111111111;
+    b[i] = (double)rand() / 1111111111;
   }
 
   printf("Setup Timing\n");
   // create CUDA event handles for timing purposes
   cudaEvent_t start_event, stop_event;
-  float elapsed_time_cpu, elapsed_time_gpu;
+  double elapsed_time_cpu, elapsed_time_gpu;
   elapsed_time_cpu = 0;
   elapsed_time_gpu = 0;
 
@@ -131,7 +131,7 @@ main(int argc, char **argv)
 
   printf("Setup GPU (copies)\n");
   // outputs
-  float *devO1Ptr;
+  double *devO1Ptr;
   cudaMalloc((void **)&devO1Ptr, nr * 4);
 
   // inputs
@@ -141,12 +141,12 @@ main(int argc, char **argv)
   int *devI2Ptr;
   cudaMalloc((void **)&devI2Ptr, n * 4);
   cudaMemcpy(devI2Ptr, indices, n * 4, cudaMemcpyHostToDevice);
-  float *devI3Ptr;
-  cudaMalloc((void **)&devI3Ptr, nc * 4);
-  cudaMemcpy(devI3Ptr, b, nc * 4, cudaMemcpyHostToDevice); // this line is broken
-  float *devI4Ptr;
-  cudaMalloc((void **)&devI4Ptr, n * 4);
-  cudaMemcpy(devI4Ptr, data, n * 4, cudaMemcpyHostToDevice);
+  double *devI3Ptr;
+  cudaMalloc((void **)&devI3Ptr, nc * 8);
+  cudaMemcpy(devI3Ptr, b, nc * 8, cudaMemcpyHostToDevice); // this line is broken
+  double *devI4Ptr;
+  cudaMalloc((void **)&devI4Ptr, n * 8);
+  cudaMemcpy(devI4Ptr, data, n * 8, cudaMemcpyHostToDevice);
 
   dim3 dimGrid((n + 31) / 32, 1);
   dim3 dimBlock(32, 1);
