@@ -52,18 +52,20 @@ main(int argc, char **argv)
   int nr; // number of rows in matrix
   int nc; // number of columns in matrix
 
+  printf("Checking args\n");
+
   // Open input file and read to end of comments
   if (argc != 2)
   {
     printf("Not enough arguemnts!\n:");
-    abort();
   }
 
   if ((fp = fopen(argv[1], "r")) == NULL)
   {
     printf("File Failed to open!\n");
-    abort();
   }
+  printf("Returning\n");
+  return;
 
   fgets(line, 128, fp);
   while (line[0] == '%')
