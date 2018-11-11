@@ -125,20 +125,20 @@ main(int argc, char **argv)
   cudaMalloc((void **)&devO1Ptr, nr * 4);
 
   // inputs
-  float *devI1Ptr;
+  int *devI1Ptr;
   cudaMalloc((void **)&devI1Ptr, (nr + 1) * 4);
-  cudaMemcpy(devI1Ptr, c, (nr + 1) * 4, cudaMemcpyHostToDevice);
-  float *devI2Ptr;
+  cudaMemcpy(devI1Ptr, ptr, (nr + 1) * 4, cudaMemcpyHostToDevice);
+  int *devI2Ptr;
   cudaMalloc((void **)&devI2Ptr, n * 4);
-  cudaMemcpy(devI2Ptr, b, n * 4, cudaMemcpyHostToDevice);
+  cudaMemcpy(devI2Ptr, indices, n * 4, cudaMemcpyHostToDevice);
   float *devI3Ptr;
   cudaMalloc((void **)&devI3Ptr, n * 4);
   cudaMemcpy(devI3Ptr, b, n * 4, cudaMemcpyHostToDevice);
   float *devI4Ptr;
   cudaMalloc((void **)&devI4Ptr, n * 4);
-  cudaMemcpy(devI4Ptr, b, n * 4, cudaMemcpyHostToDevice);
+  cudaMemcpy(devI4Ptr, data, n * 4, cudaMemcpyHostToDevice);
 
-  dim3 dimGrid((N + 31) / 32, 1);
+  dim3 dimGrid((n + 31) / 32, 1);
   dim3 dimBlock(32, 1);
 
   // Main Computation, GPU version
