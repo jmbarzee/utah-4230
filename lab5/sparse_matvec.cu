@@ -119,27 +119,36 @@ main(int argc, char **argv)
   cudaEventRecord(stop_event, 0);
   cudaEventSynchronize(stop_event);
   cudaEventElapsedTime(&elapsed_time_cpu, start_event, stop_event);
-  
+
+  // outputs
   float *devO1Ptr;
+  cudaMalloc((void **)&devO1Ptr, nr * 4);
+
+  // inputs
   float *devI1Ptr;
+  cudaMalloc((void **)&devI1Ptr, (nr + 1) * 4);
+  cudaMemcpy(devI1Ptr, c, (nr + 1) * 4, cudaMemcpyHostToDevice);
   float *devI2Ptr;
+  cudaMalloc((void **)&devI2Ptr, n * 4);
+  cudaMemcpy(devI2Ptr, b, n * 4, cudaMemcpyHostToDevice);
+  float *devI3Ptr;
+  cudaMalloc((void **)&devI3Ptr, n * 4);
+  cudaMemcpy(devI3Ptr, b, n * 4, cudaMemcpyHostToDevice);
+  float *devI4Ptr;
+  cudaMalloc((void **)&devI4Ptr, n * 4);
+  cudaMemcpy(devI4Ptr, b, n * 4, cudaMemcpyHostToDevice);
 
-  cudaMalloc((void **)&devO1Ptr, N * 4);
-  cudaMalloc((void **)&devI1Ptr, N*N * 4);
-  cudaMemcpy(devI1Ptr, c, N*N * 4, cudaMemcpyHostToDevice);
-  cudaMalloc((void **)&devI2Ptr, N * 4);
-  cudaMemcpy(devI2Ptr, b, N * 4, cudaMemcpyHostToDevice);
-
-  dim3 dimGrid((N+31)/32, 1);
+  dim3 dimGrid((N + 31) / 32, 1);
   dim3 dimBlock(32, 1);
 
   // Main Computation, GPU version
   cudaEventCreate(&start_event);
   cudaEventCreate(&stop_event);
   cudaEventRecord(start_event, 0);
-  computeGPU<<<dimGrid,dimBlock>>>(nr, ptr, indices, b, data, tgpu);
+  computeGPU<<<dimGrid, dimBlock>>>(nr, devI1Ptr, devI2Ptr, devI3Ptr, devI4Ptr, devO1Ptr);
   cudaEventRecord(stop_event, 0);
   cudaEventSynchronize(stop_event);
+  cudaMemcpy(tgpu, devO1Ptr, nr * 4, cudaMemcpyDeviceToHost);
   cudaEventElapsedTime(&elapsed_time_gpu, start_event, stop_event);
 
   // Compare computations to ensure correctness of gpu
