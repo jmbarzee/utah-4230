@@ -141,6 +141,7 @@ main(int argc, char **argv)
   int *devI2Ptr;
   cudaMalloc((void **)&devI2Ptr, n * 4);
   cudaMemcpy(devI2Ptr, indices, n * 4, cudaMemcpyHostToDevice);
+  return 0;
   float *devI3Ptr;
   cudaMalloc((void **)&devI3Ptr, n * 4);
   cudaMemcpy(devI3Ptr, b, n * 4, cudaMemcpyHostToDevice);
@@ -151,7 +152,6 @@ main(int argc, char **argv)
   dim3 dimGrid((n + 31) / 32, 1);
   dim3 dimBlock(32, 1);
 
-  return 0;
   printf("Run GPU comp\n");
   // Main Computation, GPU version
   cudaEventCreate(&start_event);
