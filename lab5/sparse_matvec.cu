@@ -111,7 +111,6 @@ main(int argc, char **argv)
     b[i] = (float)rand() / 1111111111;
   }
 
-  return 0;
   printf("Setup Timing\n");
   // create CUDA event handles for timing purposes
   cudaEvent_t start_event, stop_event;
@@ -129,6 +128,8 @@ main(int argc, char **argv)
   cudaEventSynchronize(stop_event);
   cudaEventElapsedTime(&elapsed_time_cpu, start_event, stop_event);
 
+
+  return 0;
   printf("Setup GPU (copies)\n");
   // outputs
   float *devO1Ptr;
