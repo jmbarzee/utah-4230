@@ -54,18 +54,17 @@ void main(int argc, char *argv[])
 	}
 	int rowRank, rowSize;
 	MPI_Comm rowComm;
-	MPI_Comm_split(MPI_COMM_WORLD, myRank / (N/SQRP), myRank, &rowComm);
+	MPI_Comm_split(MPI_COMM_WORLD, rank / (N / SQRP), rank, &rowComm);
 	MPI_Comm_rank(rowComm, &rowRank);
 	MPI_Comm_size(rowComm, &rowSize);
 
 	int colRank, colSize;
 	MPI_Comm colComm;
-	MPI_Comm_split(MPI_COMM_WORLD, myRank % (N/SQRP), myRank, &colComm);
+	MPI_Comm_split(MPI_COMM_WORLD, rank % (N / SQRP), rank, &colComm);
 	MPI_Comm_rank(colComm, &colRank);
 	MPI_Comm_size(colComm, &colSize);
 
-	printf("WORLD: %d/%d \t ROW: %d/%d \t COL: %d/%d\n",
-	rank, size, rowRank, rowSize, colRank, colSize);
+	printf("WORLD: %d/%d \t ROW: %d/%d \t COL: %d/%d\n", rank, size, rowRank, rowSize, colRank, colSize);
 
 	// TODO: Scatter 3x3 tiles to mya and myb
 
