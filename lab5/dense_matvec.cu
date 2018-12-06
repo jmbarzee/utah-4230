@@ -46,7 +46,7 @@ extern __global__ void mv_GPU(float *a, float (*c)[N], float *b)
       {
         acpy = 0.0;
 //        suif_tmp0 = ((float *)(float (*)[])a)[i];
-      
+      }
     for (k = 0; k <= tiles; k++)
       {
           bcpy[tx] = b[blockDim.x * k + tx];

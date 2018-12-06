@@ -107,7 +107,7 @@ main(int argc, char **argv)
   }
   ptr[nr] = n;
 
-  printf("Filling t with 0 and b with random shit\n");
+  printf("Filling t with 0 and b with random numbers\n");
   // initialize t to 0 and b with random data
   for (i = 0; i < nr; i++)
   {

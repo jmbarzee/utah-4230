@@ -1,0 +1,12 @@
+#!/bin/bash
+#SBATCH --account=soc-kp
+#SBATCH --partition=soc-kp
+#SBATCH --job-name=comp_422_openmp
+#SBATCH --nodes=2
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=10G
+#SBATCH --time=00:10:00
+#SBATCH --export=ALL
+ulimit -c unlimited -s
+mpiexec -n 2 ./matmul
