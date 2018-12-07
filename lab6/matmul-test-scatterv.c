@@ -10,13 +10,14 @@
 #include "mpi.h"
 
 #define N 9
+#define P 9
 #define SQRP 3
 
 void main(int argc, char *argv[])
 {
 	FILE *f;
 	int i, j, k, error, rank, size;
-	float a[N][N], b[N][N], c[N][N], myc[SQRP][SQRP], mya[SQRP][SQRP], myb[SQRP][SQRP];
+	float a[N][N], b[N][N], c[N][N], myc[SQRP][SQRP], mya[SQRP][SQRP], myb[SQRP][SQRP], mytmp[SQRP][SQRP];
 	MPI_Request sendreq, rcvreq;
 	MPI_Status status;
 
@@ -48,6 +49,8 @@ void main(int argc, char *argv[])
 
 	int coords[2] = {0, 0};
 	MPI_Cart_coords(commCart, rank, ndims, coords);
+	int x = coords[0];
+	int y = coords[1];
 
 	MPI_Datatype block, blocktype;
 	int displacments[9] = {0, 1, 2, 9, 10, 11, 18, 19, 20};
@@ -67,10 +70,30 @@ void main(int argc, char *argv[])
 		printf("RANK: %d (%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f) \n", rank, i, j, mya[i][0], myb[i][0], mya[i][1], myb[i][1], mya[i][2], myb[i][2]);
 	}
 
-	// MPI_Isend(mya, N * N / P, MPI_FLOAT, (rank + 1) % P, 0, MPI_COMM_WORLD, &sendreq);
-	// int src = (rank == 0) ? P - 1 : rank - 1;
-	// MPI_Irecv(mytmp, N * N / P, MPI_FLOAT, src, 0, MPI_COMM_WORLD, &rcvreq);
-	// MPI_Wait(&rcvreq, &status);
+	printf("\n");
+
+	int aSendCords[2] = {(x - y + 3) % 3, y};
+	int aSendRank;
+	int aSendCount = N * N / P;
+	MPI_Cart_rank(commCart, aSendCords, &aSendRank);
+	MPI_Isend(mya, aSendCount, MPI_FLOAT, aSendRank, 0, commCart, &sendreq);
+
+	int aRecvCords[2] = {(x + y) % 3, y};
+	int aRecvRank;
+	MPI_Cart_rank(commCart, aRecvCords, &aRecvRank);
+	MPI_Irecv(mytmp, aSendCount, MPI_FLOAT, aRecvRank, 0, commCart, &rcvreq);
+
+	MPI_Wait(&rcvreq, &status);
+
+	for (i = 0; i < aSendCount; i++)
+	{
+		mya[i] = mytmp[i];
+	}
+
+	for (i = 0; i < SQRP; i++)
+	{
+		printf("RANK: %d (%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f) \n", rank, i, j, mya[i][0], myb[i][0], mya[i][1], myb[i][1], mya[i][2], myb[i][2]);
+	}
 
 	MPI_Finalize();
 }
