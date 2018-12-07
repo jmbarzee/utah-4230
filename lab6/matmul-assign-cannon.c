@@ -41,29 +41,30 @@ void main(int argc, char *argv[])
 		// 	}
 		// }
 		// fclose(f);
-	}
-	// initialize a and b
-	float val = 0;
-	for (i = 0; i < N; i++)
-	{
-		for (j = 0; j < N; j++)
+		// initialize a and b
+		float val = 0;
+		for (i = 0; i < N; i++)
 		{
-			a[i][j] = val;
-			b[i][j] = val;
-			val++;
-		}
-	}
-	// After computing each point, output sequential results.
-	for (i = 0; i < N; i++)
-	{
-		for (j = 0; j < N; j++)
-		{
-			c[i][j] = 0.;
-			for (k = 0; k < N; k++)
+			for (j = 0; j < N; j++)
 			{
-				c[i][j] += a[i][k] * b[k][j];
+				a[i][j] = val;
+				b[i][j] = val;
+				val++;
 			}
-			// printf("SEQ: c[%d][%d] = %f\n", i, j, c[i][j]);
+		}
+
+		// After computing each point, output sequential results.
+		for (i = 0; i < N; i++)
+		{
+			for (j = 0; j < N; j++)
+			{
+				c[i][j] = 0.;
+				for (k = 0; k < N; k++)
+				{
+					c[i][j] += a[i][k] * b[k][j];
+				}
+				printf("SEQ: c[%d][%d] = %f\n", i, j, c[i][j]);
+			}
 		}
 	}
 
@@ -246,7 +247,7 @@ void main(int argc, char *argv[])
 		{
 			int p = (rank / SQRP) * 3 + i;
 			int q = (rank % SQRP) * 3 + j;
-			printf("PAR, RANK %d: c[%d][%d]: %5.f = %5.f\n", rank, p, q, c[p][q], myc[i][j]);
+			printf("PAR, RANK %d: c[%d][%d]= %5.f\n", rank, p, q, myc[i][j]);
 		}
 	}
 
