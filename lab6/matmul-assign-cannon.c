@@ -139,7 +139,8 @@ void main(int argc, char *argv[])
 	}
 
 	// TODO: Add following loop:
-	for (int q = 0; q < SQRP; q++)
+	int q;
+	for (q = 0; q < SQRP; q++)
 	{
 		for (i = 0; i < SQRP; i++)
 		{
