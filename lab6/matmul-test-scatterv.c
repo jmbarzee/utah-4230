@@ -83,6 +83,8 @@ void main(int argc, char *argv[])
 
 	MPI_Wait(&rcvreq, &status);
 
+	MPI_BARRIER(commCart);
+
 	for (i = 0; i < N; i++)
 	{
 		for (j = 0; j < N; j++)
