@@ -79,7 +79,7 @@ void main(int argc, char *argv[])
 
 	// Shift a
 	int displacment = 1;
-	int aDirection = 0; // x dimension
+	int aDirection = 1; // x dimension
 	int aRankSource, aRankDest;
 	int aSendCount = N * N / P;
 	MPI_Cart_shift(commCart, aDirection, displacment, &aRankSource, &aRankDest);
