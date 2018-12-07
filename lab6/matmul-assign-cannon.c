@@ -88,7 +88,7 @@ void main(int argc, char *argv[])
 	{
 		for (j = 0; j < SQRP; j++)
 		{
-			myc[i][j] 0.0;
+			myc[i][j] = 0.0;
 		}
 	}
 
@@ -139,7 +139,7 @@ void main(int argc, char *argv[])
 	}
 
 	// TODO: Add following loop:
-	for (q = 0; q < SQRP; q++)
+	for (int q = 0; q < SQRP; q++)
 	{
 		for (i = 0; i < SQRP; i++)
 		{
