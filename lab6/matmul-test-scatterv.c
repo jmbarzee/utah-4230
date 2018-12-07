@@ -81,7 +81,7 @@ void main(int argc, char *argv[])
 	int displacment = 1;
 	int aDirection = 0; // x dimension
 	int aRankSource, aRankDest;
-	MPI_Cart_shift(commCart, aDirection, displacment, *aRankSource, *aRankDest)
+	MPI_Cart_shift(commCart, aDirection, displacment, &aRankSource, &aRankDest)
 
 		// Initialize Send for initial skew of a
 		int aSendCount = N * N / P;
