@@ -68,7 +68,7 @@ void main(int argc, char *argv[])
 
 	for (i = 0; i < SQRP; i++)
 	{
-		printf("RANK: %d (%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f) \n", rank, i, j, mya[i][0], myb[i][0], mya[i][1], myb[i][1], mya[i][2], myb[i][2]);
+		printf("RANK: %d(%d,%d)\t(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f) \n", rank, x, y, mya[i][0], myb[i][0], mya[i][1], myb[i][1], mya[i][2], myb[i][2]);
 	}
 
 	int aSendCords[2] = {(x - y + 3) % 3, y};
@@ -94,7 +94,7 @@ void main(int argc, char *argv[])
 
 	for (i = 0; i < SQRP; i++)
 	{
-		printf("RANK: %d (%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f) \n", rank, i, j, mya[i][0], myb[i][0], mya[i][1], myb[i][1], mya[i][2], myb[i][2]);
+		printf("RANK: %d(%d,%d)\t(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f) \n", rank, x, y, mya[i][0], myb[i][0], mya[i][1], myb[i][1], mya[i][2], myb[i][2]);
 	}
 
 	MPI_Finalize();
