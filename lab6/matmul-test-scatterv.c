@@ -68,9 +68,9 @@ void main(int argc, char *argv[])
 	MPI_Scatterv(b, sendCount, displacments, blocktype, myb, recvCount, MPI_FLOAT, 0, commCart);
 
 	// Dump
-	printf("post: %d(%d,%d)
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)
+	printf("post: %d(%d,%d)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
 		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)",
 		rank, x, y, 
 		mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
@@ -101,9 +101,9 @@ void main(int argc, char *argv[])
 	}
 
 	// Dump
-	printf("post: %d(%d,%d)
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)
+	printf("post: %d(%d,%d)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
 		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)",
 		rank, x, y, 
 		mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
@@ -134,9 +134,9 @@ void main(int argc, char *argv[])
 	}
 
 	// Dump
-	printf("post: %d(%d,%d)
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)
+	printf("post: %d(%d,%d)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
 		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)",
 		rank, x, y, 
 		mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
