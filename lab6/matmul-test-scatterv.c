@@ -34,8 +34,9 @@ void main(int argc, char *argv[])
 		{
 			for (j = 0; j < N; j++)
 			{
-				a[i][j] = val++;
-				b[i][j] = val++;
+				val++;
+				a[i][j] = val;
+				b[i][j] = val;
 			}
 		}
 	}
