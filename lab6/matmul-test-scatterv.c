@@ -68,10 +68,14 @@ void main(int argc, char *argv[])
 	MPI_Scatterv(b, sendCount, displacments, blocktype, myb, recvCount, MPI_FLOAT, 0, commCart);
 
 	// Dump
-	for (i = 0; i < SQRP; i++)
-	{
-		printf("pre: %d(%d,%d)\t(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f) \n", rank, x, y, mya[i][0], myb[i][0], mya[i][1], myb[i][1], mya[i][2], myb[i][2]);
-	}
+	printf("post: %d(%d,%d)
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)",
+		rank, x, y, 
+		mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
+		mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
+		mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
 
 	// Initialize Send for initial skew of a
 	int aSendCords[2] = {y, (x - y + 3) % 3};
@@ -96,6 +100,16 @@ void main(int argc, char *argv[])
 		}
 	}
 
+	// Dump
+	printf("post: %d(%d,%d)
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)",
+		rank, x, y, 
+		mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
+		mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
+		mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
+
 	// Initialize Send for initial skew of b
 	int bSendCords[2] = {(y - x + 3) % 3, x};
 	int bSendRank;
@@ -119,10 +133,15 @@ void main(int argc, char *argv[])
 		}
 	}
 
-	for (i = 0; i < SQRP; i++)
-	{
-		printf("post: %d(%d,%d)\t(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f) \n", rank, x, y, mya[i][0], myb[i][0], mya[i][1], myb[i][1], mya[i][2], myb[i][2]);
-	}
+	// Dump
+	printf("post: %d(%d,%d)
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)",
+		rank, x, y, 
+		mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
+		mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
+		mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
 
 	MPI_Finalize();
 }
