@@ -41,19 +41,16 @@ void main(int argc, char *argv[])
 		// 	}
 		// }
 		// fclose(f);
-		if (rank == 0)
+	}
+	// initialize a and b
+	float val = 0;
+	for (i = 0; i < N; i++)
+	{
+		for (j = 0; j < N; j++)
 		{
-			// initialize a and b
-			float val = 0;
-			for (i = 0; i < N; i++)
-			{
-				for (j = 0; j < N; j++)
-				{
-					a[i][j] = val;
-					b[i][j] = val;
-					val++;
-				}
-			}
+			a[i][j] = val;
+			b[i][j] = val;
+			val++;
 		}
 	}
 	// After computing each point, output sequential results.
