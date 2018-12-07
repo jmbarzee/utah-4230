@@ -55,19 +55,18 @@ void main(int argc, char *argv[])
 				}
 			}
 		}
-
-		// After computing each point, output sequential results.
-		for (i = 0; i < N; i++)
+	}
+	// After computing each point, output sequential results.
+	for (i = 0; i < N; i++)
+	{
+		for (j = 0; j < N; j++)
 		{
-			for (j = 0; j < N; j++)
+			c[i][j] = 0.;
+			for (k = 0; k < N; k++)
 			{
-				c[i][j] = 0.;
-				for (k = 0; k < N; k++)
-				{
-					c[i][j] += a[i][k] * b[k][j];
-				}
-				printf("SEQ: c[%d][%d] = %f\n", i, j, c[i][j]);
+				c[i][j] += a[i][k] * b[k][j];
 			}
+			// printf("SEQ: c[%d][%d] = %f\n", i, j, c[i][j]);
 		}
 	}
 
@@ -248,8 +247,8 @@ void main(int argc, char *argv[])
 	{
 		for (j = 0; j < SQRP; j++)
 		{
-			int p = (rank / SQRP)*3 + i;
-			int q = (rank % SQRP)*3 + j;
+			int p = (rank / SQRP) * 3 + i;
+			int q = (rank % SQRP) * 3 + j;
 			printf("PAR, RANK %d: c[%d][%d]: %f = %f\n", rank, p, q, c[p][q], myc[i][j]);
 		}
 	}
