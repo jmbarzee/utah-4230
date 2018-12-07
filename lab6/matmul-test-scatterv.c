@@ -68,7 +68,7 @@ void main(int argc, char *argv[])
 	MPI_Scatterv(b, sendCount, displacments, blocktype, myb, recvCount, MPI_FLOAT, 0, commCart);
 
 	// Dump
-	printf("post: %d(%d,%d)\n\
+	printf("pre: %d(%d,%d)\n\
 		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
 		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
 		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
@@ -101,7 +101,7 @@ void main(int argc, char *argv[])
 	}
 
 	// Dump
-	printf("post: %d(%d,%d)\n\
+	printf("postA: %d(%d,%d)\n\
 		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
 		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
 		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
@@ -134,7 +134,7 @@ void main(int argc, char *argv[])
 	}
 
 	// Dump
-	printf("post: %d(%d,%d)\n\
+	printf("postB: %d(%d,%d)\n\
 		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
 		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
 		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
