@@ -78,7 +78,7 @@ void main(int argc, char *argv[])
 		   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
 
 	// Shift a
-	int displacment = 1;
+	int displacment = -1;
 	int aDirection = 1; // x dimension
 	int aRankSource, aRankDest;
 	int aSendCount = N * N / P;
