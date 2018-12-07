@@ -44,7 +44,7 @@ void main(int argc, char *argv[])
 	int periods[2] = {1, 1};
 	int reorder = 0;
 	MPI_Comm commCart;
-	MPI_Cart_create(MPI_COMM_WORLD, ndims, dims, periods, reorder, &commCart);
+	MPI_Cart_create(MPI_COMM_WORLD, ndims, dims, periods, reorder, commCart);
 
 	int coords[2] = {0, 0};
 	MPI_Cart_coords(commCart, rank, ndims, coords);
@@ -52,12 +52,12 @@ void main(int argc, char *argv[])
 	MPI_Datatype block, blocktype;
 	int displacments[9] = {0, 1, 2, 9, 10, 11, 18, 19, 20};
 	int sendCount[9] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
-	int recvCount[9] = {9, 9, 9, 9, 9, 9, 9, 9, 9};
+	int recvCount = 9;
 	MPI_Type_vector(3, 3, 9, MPI_INT, &block);
 	MPI_Type_commit(&block); // not necessary
 	MPI_Type_create_resized(block, 0, 3 * sizeof(int), &blocktype);
 	MPI_Type_commit(&blocktype); // neededint
-	MPI_Scatterv(a, sendCount, displacments, blocktype, mya, recvCount, MPI_INT, 0, &commCart);
+	MPI_Scatterv(a, sendCount, displacments, blocktype, mya, recvCount, MPI_INT, 0, commCart);
 
 	// TODO: Scatter 3x3 tiles to mya and myb
 
