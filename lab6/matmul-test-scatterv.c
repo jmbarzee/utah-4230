@@ -92,7 +92,7 @@ void main(int argc, char *argv[])
 	{
 		for (j = 0; j < SQRP; j++)
 		{
-			myb[i][j] = mytmp[i][j];
+			mya[i][j] = mytmp[i][j];
 		}
 	}
 
