@@ -66,7 +66,7 @@ void main(int argc, char *argv[])
 				{
 					c[i][j] += a[i][k] * b[k][j];
 				}
-				printf("SEQ: c[%d][%d] = %f\n", i, j, c[i][j]);
+				// printf("SEQ: c[%d][%d] = %f\n", i, j, c[i][j]);
 			}
 		}
 	}
@@ -105,6 +105,15 @@ void main(int argc, char *argv[])
 			myc[i][j] = 0.0;
 		}
 	}
+	// Dump
+	printf("PostScatter: %d(%d,%d)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
+		   rank, x, y,
+		   mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
+		   mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
+		   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
 
 	// Initialize Send for initial skew of a
 	int aSendCords[2] = {y, (x - y + 3) % 3};
@@ -143,6 +152,16 @@ void main(int argc, char *argv[])
 	MPI_Irecv(mytmp, bSendCount, MPI_FLOAT, bRecvRank, 0, commCart, &rcvreq);
 	MPI_Wait(&rcvreq, &status);
 
+	// Dump
+	printf("PostSqew: %d(%d,%d)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
+		   rank, x, y,
+		   mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
+		   mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
+		   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
+
 	// Copy myb from mytmp (receive buffer)
 	for (i = 0; i < SQRP; i++)
 	{
@@ -166,6 +185,7 @@ void main(int argc, char *argv[])
 				}
 			}
 		}
+
 		// Shift a
 		int aDisplacment = -1;
 		int aDirection = 1; // x dimension
@@ -184,6 +204,7 @@ void main(int argc, char *argv[])
 			}
 		}
 
+		// Shift b
 		int bDisplacment = -1;
 		int bDirection = 0; // x dimension
 		int bRankSource, bRankDest;
@@ -200,6 +221,16 @@ void main(int argc, char *argv[])
 				myb[i][j] = mytmp[i][j];
 			}
 		}
+
+		// Dump
+		printf("PostShift%d: %d(%d,%d)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
+			   q, rank, x, y,
+			   mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
+			   mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
+			   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
 	}
 
 	// Output local results to compare against sequential
