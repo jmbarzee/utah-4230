@@ -58,6 +58,7 @@ void main(int argc, char *argv[])
 	MPI_Type_create_resized(block, 0, 3 * sizeof(int), &blocktype);
 	MPI_Type_commit(&blocktype); // neededint
 	MPI_Scatterv(a, sendCount, displacments, blocktype, mya, recvCount, MPI_INT, 0, commCart);
+	MPI_Scatterv(b, sendCount, displacments, blocktype, myb, recvCount, MPI_INT, 0, commCart);
 
 	// TODO: Scatter 3x3 tiles to mya and myb
 
