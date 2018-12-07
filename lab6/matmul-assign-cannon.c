@@ -138,6 +138,16 @@ void main(int argc, char *argv[])
 		}
 	}
 
+	// Dump
+	printf("PostSqewA: %d(%d,%d)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
+		   rank, x, y,
+		   mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
+		   mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
+		   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
+
 	// Initialize Send for initial skew of b
 	int bSendCords[2] = {(y - x + 3) % 3, x};
 	int bSendRank;
@@ -152,16 +162,6 @@ void main(int argc, char *argv[])
 	MPI_Irecv(mytmp, bSendCount, MPI_FLOAT, bRecvRank, 0, commCart, &rcvreq);
 	MPI_Wait(&rcvreq, &status);
 
-	// Dump
-	printf("PostSqew: %d(%d,%d)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
-		   rank, x, y,
-		   mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
-		   mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
-		   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
-
 	// Copy myb from mytmp (receive buffer)
 	for (i = 0; i < SQRP; i++)
 	{
@@ -170,6 +170,16 @@ void main(int argc, char *argv[])
 			myb[i][j] = mytmp[i][j];
 		}
 	}
+
+	// Dump
+	printf("PostSqewB: %d(%d,%d)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
+		   rank, x, y,
+		   mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
+		   mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
+		   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
 
 	// TODO: Add following loop:
 	int q;
