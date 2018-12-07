@@ -44,7 +44,7 @@ void main(int argc, char *argv[])
 	int periods[2] = {1, 1};
 	int reorder = 0;
 	MPI_Comm commCart;
-	MPI_Cart_create(MPI_COMM_WORLD, ndims, dims, periods, reorder, commCart);
+	MPI_Cart_create(MPI_COMM_WORLD, ndims, dims, periods, reorder, &commCart);
 
 	int coords[2] = {0, 0};
 	MPI_Cart_coords(commCart, rank, ndims, coords);
