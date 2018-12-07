@@ -106,14 +106,14 @@ void main(int argc, char *argv[])
 		}
 	}
 	// Dump
-	printf("PostScatter: %d(%d,%d)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
-		   rank, x, y,
-		   mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
-		   mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
-		   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
+	// printf("PostScatter: %d(%d,%d)\n\
+	// 	(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+	// 	(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+	// 	(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
+	// 	   rank, x, y,
+	// 	   mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
+	// 	   mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
+	// 	   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
 
 	// Initialize Send for initial skew of a
 	int aSendCords[2] = {y, (x - y + 3) % 3};
@@ -139,14 +139,14 @@ void main(int argc, char *argv[])
 	}
 
 	// Dump
-	printf("PostSqewA: %d(%d,%d)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
-		   rank, x, y,
-		   mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
-		   mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
-		   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
+	// printf("PostSqewA: %d(%d,%d)\n\
+	// 	(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+	// 	(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+	// 	(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
+	// 	   rank, x, y,
+	// 	   mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
+	// 	   mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
+	// 	   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
 
 	// Initialize Send for initial skew of b
 	int bSendCords[2] = {(y - x + 3) % 3, x};
@@ -172,14 +172,14 @@ void main(int argc, char *argv[])
 	}
 
 	// Dump
-	printf("PostSqewB: %d(%d,%d)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
-		   rank, x, y,
-		   mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
-		   mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
-		   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
+	// printf("PostSqewB: %d(%d,%d)\n\
+	// 	(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+	// 	(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+	// 	(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
+	// 	   rank, x, y,
+	// 	   mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
+	// 	   mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
+	// 	   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
 
 	// TODO: Add following loop:
 	int q;
@@ -233,14 +233,14 @@ void main(int argc, char *argv[])
 		}
 
 		// Dump
-		printf("PostShift%d: %d(%d,%d)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
-			   q, rank, x, y,
-			   mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
-			   mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
-			   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
+		// printf("PostShift%d: %d(%d,%d)\n\
+		// (%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		// (%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		// (%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
+		// 	   q, rank, x, y,
+		// 	   mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
+		// 	   mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
+		// 	   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
 	}
 
 	// Output local results to compare against sequential
@@ -248,7 +248,7 @@ void main(int argc, char *argv[])
 	{
 		for (j = 0; j < SQRP; j++)
 		{
-			printf("PAR, RANK %d: c[%d][%d] = %f\n", rank, (rank / SQRP) + i, (rank % SQRP) + j, myc[i][j]);
+			printf("PAR, RANK %d: c[%d][%d]: %f = %f\n", rank, (rank / SQRP) + i, (rank % SQRP) + j, c[(rank / SQRP) + i][(rank % SQRP) + j], myc[i][j]);
 		}
 	}
 
