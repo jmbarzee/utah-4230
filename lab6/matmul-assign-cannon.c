@@ -82,8 +82,8 @@ void main(int argc, char *argv[])
 	// Grab coordinates of processor
 	int coords[2] = {0, 0};
 	MPI_Cart_coords(commCart, rank, ndims, coords);
-	int x = coords[0];
-	int y = coords[1];
+	int x = coords[1];
+	int y = coords[0];
 
 	// Scatter a and b / Initilize mya and myb
 	MPI_Datatype block, blocktype;
