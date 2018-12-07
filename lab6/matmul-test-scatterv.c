@@ -70,8 +70,6 @@ void main(int argc, char *argv[])
 		printf("RANK: %d (%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f) \n", rank, i, j, mya[i][0], myb[i][0], mya[i][1], myb[i][1], mya[i][2], myb[i][2]);
 	}
 
-	printf("\n");
-
 	int aSendCords[2] = {(x - y + 3) % 3, y};
 	int aSendRank;
 	int aSendCount = N * N / P;
@@ -85,9 +83,12 @@ void main(int argc, char *argv[])
 
 	MPI_Wait(&rcvreq, &status);
 
-	for (i = 0; i < aSendCount; i++)
+	for (i = 0; i < N; i++)
 	{
-		mya[i/3][i%3] = mytmp[i];
+		for (j = 0; j < N; j++)
+		{
+			mya[i][j] = mytmp[i][j];
+		}
 	}
 
 	for (i = 0; i < SQRP; i++)
