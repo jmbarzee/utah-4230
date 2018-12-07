@@ -87,6 +87,15 @@ void main(int argc, char *argv[])
 	MPI_Irecv(mytmp, aSendCount, MPI_FLOAT, aRankSource, 0, commCart, &rcvreq);
 	MPI_Wait(&rcvreq, &status);
 
+	// Copy myb from mytmp (receive buffer)
+	for (i = 0; i < SQRP; i++)
+	{
+		for (j = 0; j < SQRP; j++)
+		{
+			myb[i][j] = mytmp[i][j];
+		}
+	}
+
 	// Dump
 	printf("postA: %d(%d,%d)\n\
 		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
