@@ -34,9 +34,9 @@ void main(int argc, char *argv[])
 		{
 			for (j = 0; j < N; j++)
 			{
-				val++;
 				a[i][j] = val;
 				b[i][j] = val;
+				val++;
 			}
 		}
 	}
@@ -50,8 +50,8 @@ void main(int argc, char *argv[])
 
 	int coords[2] = {0, 0};
 	MPI_Cart_coords(commCart, rank, ndims, coords);
-	int x = coords[0];
-	int y = coords[1];
+	int x = coords[1];
+	int y = coords[0];
 
 	MPI_Datatype block, blocktype;
 	int displacments[9] = {0, 1, 2, 9, 10, 11, 18, 19, 20};
@@ -71,13 +71,13 @@ void main(int argc, char *argv[])
 		printf("pre: %d(%d,%d)\t(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f) \n", rank, x, y, mya[i][0], myb[i][0], mya[i][1], myb[i][1], mya[i][2], myb[i][2]);
 	}
 
-	int aSendCords[2] = {(x - y + 3) % 3, y};
+	int aSendCords[2] = {y, (x - y + 3) % 3};
 	int aSendRank;
 	int aSendCount = N * N / P;
 	MPI_Cart_rank(commCart, aSendCords, &aSendRank);
 	MPI_Isend(mya, aSendCount, MPI_FLOAT, aSendRank, 0, commCart, &sendreq);
 
-	int aRecvCords[2] = {(x + y) % 3, y};
+	int aRecvCords[2] = {y, (x + y) % 3};
 	int aRecvRank;
 	MPI_Cart_rank(commCart, aRecvCords, &aRecvRank);
 	MPI_Irecv(mytmp, aSendCount, MPI_FLOAT, aRecvRank, 0, commCart, &rcvreq);
