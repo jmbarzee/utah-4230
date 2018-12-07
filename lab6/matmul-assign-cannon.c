@@ -30,17 +30,31 @@ void main(int argc, char *argv[])
 	{
 
 		// read in matrix
-		f = fopen("matrixA.dat", "r");
-		for (i = 0; i < N; i++)
+		// f = fopen("matrixA.dat", "r");
+		// for (i = 0; i < N; i++)
+		// {
+		// 	for (j = 0; j < N; j++)
+		// 	{
+		// 		error = fscanf(f, "%f", &tmpdata);
+		// 		a[i][j] = tmpdata;
+		// 		b[i][j] = tmpdata + 1.;
+		// 	}
+		// }
+		// fclose(f);
+		if (rank == 0)
 		{
-			for (j = 0; j < N; j++)
+			// initialize a and b
+			float val = 0;
+			for (i = 0; i < N; i++)
 			{
-				error = fscanf(f, "%f", &tmpdata);
-				a[i][j] = tmpdata;
-				b[i][j] = tmpdata + 1.;
+				for (j = 0; j < N; j++)
+				{
+					a[i][j] = val;
+					b[i][j] = val;
+					val++;
+				}
 			}
 		}
-		fclose(f);
 
 		// After computing each point, output sequential results.
 		for (i = 0; i < N; i++)
