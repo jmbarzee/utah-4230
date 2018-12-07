@@ -77,64 +77,31 @@ void main(int argc, char *argv[])
 		mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
 		mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
 
-	// Initialize Send for initial skew of a
-	int aSendCords[2] = {y, (x - y + 3) % 3};
-	int aSendRank;
-	int aSendCount = N * N / P;
-	MPI_Cart_rank(commCart, aSendCords, &aSendRank);
-	MPI_Isend(mya, aSendCount, MPI_FLOAT, aSendRank, 0, commCart, &sendreq);
+	// // Initialize Send for initial skew of a
+	// int aSendCords[2] = {y, (x - y + 3) % 3};
+	// int aSendRank;
+	// int aSendCount = N * N / P;
+	// MPI_Cart_rank(commCart, aSendCords, &aSendRank);
+	// MPI_Isend(mya, aSendCount, MPI_FLOAT, aSendRank, 0, commCart, &sendreq);
 
-	// Initialize Recv for initial skew of a
-	int aRecvCords[2] = {y, (x + y) % 3};
-	int aRecvRank;
-	MPI_Cart_rank(commCart, aRecvCords, &aRecvRank);
-	MPI_Irecv(mytmp, aSendCount, MPI_FLOAT, aRecvRank, 0, commCart, &rcvreq);
-	MPI_Wait(&rcvreq, &status);
-
-	// Copy mya from mytmp (receive buffer)
-	for (i = 0; i < N; i++)
-	{
-		for (j = 0; j < N; j++)
-		{
-			mya[i][j] = mytmp[i][j];
-		}
-	}
-
-	// Dump
-	printf("postA: %d(%d,%d)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
-		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
-		rank, x, y, 
-		mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
-		mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
-		mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
-
-	// // Initialize Send for initial skew of b
-	// int bSendCords[2] = {(y - x + 3) % 3, x};
-	// int bSendRank;
-	// int bSendCount = N * N / P;
-	// MPI_Cart_rank(commCart, bSendCords, &bSendRank);
-	// MPI_Isend(myb, bSendCount, MPI_FLOAT, bSendRank, 0, commCart, &sendreq);
-
-	// // Initialize Recv for initial skew of b
-	// int bRecvCords[2] = {(y + x) % 3, x};
-	// int bRecvRank;
-	// MPI_Cart_rank(commCart, bRecvCords, &bRecvRank);
-	// MPI_Irecv(mytmp, bSendCount, MPI_FLOAT, bRecvRank, 0, commCart, &rcvreq);
+	// // Initialize Recv for initial skew of a
+	// int aRecvCords[2] = {y, (x + y) % 3};
+	// int aRecvRank;
+	// MPI_Cart_rank(commCart, aRecvCords, &aRecvRank);
+	// MPI_Irecv(mytmp, aSendCount, MPI_FLOAT, aRecvRank, 0, commCart, &rcvreq);
 	// MPI_Wait(&rcvreq, &status);
 
-	// // Copy myb from mytmp (receive buffer)
-	// for (i = 0; i < N; i++)
+	// // Copy mya from mytmp (receive buffer)
+	// for (i = 0; i < SQRP; i++)
 	// {
-	// 	for (j = 0; j < N; j++)
+	// 	for (j = 0; j < SQRP; j++)
 	// 	{
-	// 		myb[i][j] = mytmp[i][j];
+	// 		mya[i][j] = mytmp[i][j];
 	// 	}
 	// }
 
 	// // Dump
-	// printf("postB: %d(%d,%d)\n\
+	// printf("postA: %d(%d,%d)\n\
 	// 	(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
 	// 	(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
 	// 	(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
@@ -142,6 +109,39 @@ void main(int argc, char *argv[])
 	// 	mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
 	// 	mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
 	// 	mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
+
+	// Initialize Send for initial skew of b
+	int bSendCords[2] = {(y - x + 3) % 3, x};
+	int bSendRank;
+	int bSendCount = N * N / P;
+	MPI_Cart_rank(commCart, bSendCords, &bSendRank);
+	MPI_Isend(myb, bSendCount, MPI_FLOAT, bSendRank, 0, commCart, &sendreq);
+
+	// Initialize Recv for initial skew of b
+	int bRecvCords[2] = {(y + x) % 3, x};
+	int bRecvRank;
+	MPI_Cart_rank(commCart, bRecvCords, &bRecvRank);
+	MPI_Irecv(mytmp, bSendCount, MPI_FLOAT, bRecvRank, 0, commCart, &rcvreq);
+	MPI_Wait(&rcvreq, &status);
+
+	// Copy myb from mytmp (receive buffer)
+	for (i = 0; i < SQRP; i++)
+	{
+		for (j = 0; j < SQRP; j++)
+		{
+			myb[i][j] = mytmp[i][j];
+		}
+	}
+
+	// Dump
+	printf("postB: %d(%d,%d)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
+		rank, x, y, 
+		mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
+		mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
+		mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
 
 	MPI_Finalize();
 }
