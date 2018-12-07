@@ -77,18 +77,13 @@ void main(int argc, char *argv[])
 		   mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
 		   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
 
-	// Initialize Coords for a shift
+	// Shift a
 	int displacment = 1;
 	int aDirection = 0; // x dimension
 	int aRankSource, aRankDest;
-	MPI_Cart_shift(commCart, aDirection, displacment, &aRankSource, &aRankDest);
-
-	// Initialize Send for initial skew of a
 	int aSendCount = N * N / P;
+	MPI_Cart_shift(commCart, aDirection, displacment, &aRankSource, &aRankDest);
 	MPI_Isend(mya, aSendCount, MPI_FLOAT, aRankDest, 0, commCart, &sendreq);
-
-	// Initialize Recv for initial skew of a
-	MPI_Cart_rank(commCart, aRecvCords, &aRankSource);
 	MPI_Irecv(mytmp, aSendCount, MPI_FLOAT, aRankSource, 0, commCart, &rcvreq);
 	MPI_Wait(&rcvreq, &status);
 
