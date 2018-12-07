@@ -78,16 +78,16 @@ void main(int argc, char *argv[])
 		   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
 
 	// Shift a
-	int displacment = -1;
+	int aDisplacment = -1;
 	int aDirection = 1; // x dimension
 	int aRankSource, aRankDest;
 	int aSendCount = N * N / P;
-	MPI_Cart_shift(commCart, aDirection, displacment, &aRankSource, &aRankDest);
+	MPI_Cart_shift(commCart, aDirection, aDisplacment, &aRankSource, &aRankDest);
 	MPI_Isend(mya, aSendCount, MPI_FLOAT, aRankDest, 0, commCart, &sendreq);
 	MPI_Irecv(mytmp, aSendCount, MPI_FLOAT, aRankSource, 0, commCart, &rcvreq);
 	MPI_Wait(&rcvreq, &status);
 
-	// Copy myb from mytmp (receive buffer)
+	// Copy mya from mytmp (receive buffer)
 	for (i = 0; i < SQRP; i++)
 	{
 		for (j = 0; j < SQRP; j++)
@@ -105,6 +105,35 @@ void main(int argc, char *argv[])
 		   mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
 		   mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
 		   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
+		   	// Shift a
+	int bDisplacment = -1;
+	int bDirection = 0; // x dimension
+	int bRankSource, bRankDest;
+	int bSendCount = N * N / P;
+	MPI_Cart_shift(commCart, bDirection, bDisplacment, &bRankSource, &bRankDest);
+	MPI_Isend(myb, bSendCount, MPI_FLOAT, bRankDest, 0, commCart, &sendreq);
+	MPI_Irecv(mytmp, bSendCount, MPI_FLOAT, bRankSource, 0, commCart, &rcvreq);
+	MPI_Wait(&rcvreq, &status);
+
+	// Copy mya from mytmp (receive buffer)
+	for (i = 0; i < SQRP; i++)
+	{
+		for (j = 0; j < SQRP; j++)
+		{
+			myb[i][j] = mytmp[i][j];
+		}
+	}
+
+	// Dump
+	printf("postB: %d(%d,%d)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\
+		(%3.0f, %3.0f) (%3.0f, %3.0f) (%3.0f, %3.0f)\n\n",
+		   rank, x, y,
+		   mya[0][0], myb[0][0], mya[0][1], myb[0][1], mya[0][2], myb[0][2],
+		   mya[1][0], myb[1][0], mya[1][1], myb[1][1], mya[1][2], myb[1][2],
+		   mya[2][0], myb[2][0], mya[2][1], myb[2][1], mya[2][2], myb[2][2]);
+
 
 	MPI_Finalize();
 }
