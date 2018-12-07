@@ -249,7 +249,7 @@ void main(int argc, char *argv[])
 		for (j = 0; j < SQRP; j++)
 		{
 			int p = (rank / SQRP)*3 + i;
-			int q = (rank % SQRP)*3 + j
+			int q = (rank % SQRP)*3 + j;
 			printf("PAR, RANK %d: c[%d][%d]: %f = %f\n", rank, (rank / SQRP) + i, (rank % SQRP) + j, c[p][q], myc[i][j]);
 		}
 	}
