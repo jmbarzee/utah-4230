@@ -87,7 +87,7 @@ void main(int argc, char *argv[])
 
 	for (i = 0; i < aSendCount; i++)
 	{
-		mya[i] = mytmp[i];
+		mya[i/3][i%3] = mytmp[i];
 	}
 
 	for (i = 0; i < SQRP; i++)
