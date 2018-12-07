@@ -17,7 +17,7 @@ void main(int argc, char *argv[])
 {
 	FILE *f;
 	int i, j, k, error, rank, size;
-	float a[N][N], b[N][N], c[N][N], myc[SQRP][SQRP], mya[SQRP][SQRP], myb[SQRP][SQRP], tmpdata;
+	float a[N][N], b[N][N], c[N][N], myc[SQRP][SQRP], mya[SQRP][SQRP], myb[SQRP][SQRP], mytmp[SQRP][SQRP], tmpdata;
 	MPI_Request sendreq, rcvreq;
 	MPI_Status status;
 
@@ -69,9 +69,9 @@ void main(int argc, char *argv[])
 	int coords[2] = {0, 0};
 	MPI_Cart_coords(commCart, rank, ndims, coords);
 	int x = coords[0];
-	int y = coords[0];
+	int y = coords[1];
 
-	// Scatter a and b
+	// Scatter a and b / Initilize mya and myb
 	MPI_Datatype block, blocktype;
 	int displacments[9] = {0, 1, 2, 9, 10, 11, 18, 19, 20};
 	int sendCount[9] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
@@ -83,6 +83,7 @@ void main(int argc, char *argv[])
 	MPI_Scatterv(a, sendCount, displacments, blocktype, mya, recvCount, MPI_FLOAT, 0, commCart);
 	MPI_Scatterv(b, sendCount, displacments, blocktype, myb, recvCount, MPI_FLOAT, 0, commCart);
 
+	// Initilize myc
 	for (i = 0; i < SQRP; i++)
 	{
 		for (j = 0; j < SQRP; j++)
@@ -91,21 +92,66 @@ void main(int argc, char *argv[])
 		}
 	}
 
-	MPI_Isend(mya, N * N / P, MPI_FLOAT, (rank + 1) % P, 0, MPI_COMM_WORLD, &sendreq);
-	int src = (rank == 0) ? P - 1 : rank - 1;
-	MPI_Irecv(tmpa, N * N / P, MPI_FLOAT, src, 0, MPI_COMM_WORLD, &rcvreq);
-	… MPI_Wait(&rcvreq, &status);
+	// Initialize Send for initial skew of a
+	int aSendCords[2] = {y, (x - y + 3) % 3};
+	int aSendRank;
+	int aSendCount = N * N / P;
+	MPI_Cart_rank(commCart, aSendCords, &aSendRank);
+	MPI_Isend(mya, aSendCount, MPI_FLOAT, aSendRank, 0, commCart, &sendreq);
 
-	// TODO: Move a and b data within Cartesian Grid using initial skew
-	// operations (see p. 10 of Lecture 20.)
+	// Initialize Recv for initial skew of a
+	int aRecvCords[2] = {y, (x + y) % 3};
+	int aRecvRank;
+	MPI_Cart_rank(commCart, aRecvCords, &aRecvRank);
+	MPI_Irecv(mytmp, aSendCount, MPI_FLOAT, aRecvRank, 0, commCart, &rcvreq);
+	MPI_Wait(&rcvreq, &status);
+
+	// Copy mya from mytmp (receive buffer)
+	for (i = 0; i < SQRP; i++)
+	{
+		for (j = 0; j < SQRP; j++)
+		{
+			mya[i][j] = mytmp[i][j];
+		}
+	}
+
+	// Initialize Send for initial skew of b
+	int bSendCords[2] = {(y - x + 3) % 3, x};
+	int bSendRank;
+	int bSendCount = N * N / P;
+	MPI_Cart_rank(commCart, bSendCords, &bSendRank);
+	MPI_Isend(myb, bSendCount, MPI_FLOAT, bSendRank, 0, commCart, &sendreq);
+
+	// Initialize Recv for initial skew of b
+	int bRecvCords[2] = {(y + x) % 3, x};
+	int bRecvRank;
+	MPI_Cart_rank(commCart, bRecvCords, &bRecvRank);
+	MPI_Irecv(mytmp, bSendCount, MPI_FLOAT, bRecvRank, 0, commCart, &rcvreq);
+	MPI_Wait(&rcvreq, &status);
+
+	// Copy myb from mytmp (receive buffer)
+	for (i = 0; i < SQRP; i++)
+	{
+		for (j = 0; j < SQRP; j++)
+		{
+			myb[i][j] = mytmp[i][j];
+		}
+	}
 
 	// TODO: Add following loop:
-	// for (k=0; k<=SQRP-1; k++} {
-	//    CALC: Should be like sequential code, but use
-	//          myc, mya, and myb.  Adjust bounds for all loops to SQRP.
-	//          (More generally, (N/P/SQRP)).
-	//    SHIFT: Shift A leftward and B upward by 1 in Cartesian grid.
-	// }
+	for (q = 0; q < SQRP; q++)
+	{
+		for (i = 0; i < SQRP; i++)
+		{
+			for (j = 0; j < SQRP; j++)
+			{
+				for (k = 0; k < SQRP; k++)
+				{
+					myc[i][j] += mya[i][k] * myb[k][j];
+				}
+			}
+		}
+	}
 
 	// Output local results to compare against sequential
 	for (i = 0; i < SQRP; i++)
