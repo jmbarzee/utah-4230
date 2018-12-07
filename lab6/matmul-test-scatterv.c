@@ -16,7 +16,7 @@ void main(int argc, char *argv[])
 {
 	FILE *f;
 	int i, j, k, error, rank, size;
-	int a[N][N], b[N][N], c[N][N], myc[SQRP][SQRP], mya[SQRP][SQRP], myb[SQRP][SQRP];
+	float a[N][N], b[N][N], c[N][N], myc[SQRP][SQRP], mya[SQRP][SQRP], myb[SQRP][SQRP];
 	MPI_Request sendreq, rcvreq;
 	MPI_Status status;
 
@@ -28,7 +28,7 @@ void main(int argc, char *argv[])
 	if (rank == 0)
 	{
 		// initialize a and b
-		int val = 0;
+		float val = 0;
 		for (i = 0; i < N; i++)
 		{
 			for (j = 0; j < N; j++)
@@ -53,12 +53,12 @@ void main(int argc, char *argv[])
 	int displacments[9] = {0, 1, 2, 9, 10, 11, 18, 19, 20};
 	int sendCount[9] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
 	int recvCount = 9;
-	MPI_Type_vector(3, 3, 9, MPI_INT, &block);
+	MPI_Type_vector(3, 3, 9, MPI_FLOAT, &block);
 	MPI_Type_commit(&block); // not necessary
-	MPI_Type_create_resized(block, 0, 3 * sizeof(int), &blocktype);
+	MPI_Type_create_resized(block, 0, 3 * sizeof(float), &blocktype);
 	MPI_Type_commit(&blocktype); // neededint
-	MPI_Scatterv(a, sendCount, displacments, blocktype, mya, recvCount, MPI_INT, 0, commCart);
-	MPI_Scatterv(b, sendCount, displacments, blocktype, myb, recvCount, MPI_INT, 0, commCart);
+	MPI_Scatterv(a, sendCount, displacments, blocktype, mya, recvCount, MPI_FLOAT, 0, commCart);
+	MPI_Scatterv(b, sendCount, displacments, blocktype, myb, recvCount, MPI_FLOAT, 0, commCart);
 
 	// TODO: Scatter 3x3 tiles to mya and myb
 
@@ -66,7 +66,7 @@ void main(int argc, char *argv[])
 	{
 		for (j = 0; j < SQRP; j++)
 		{
-			printf("RANK: %d, a[%d][%d] = %d, b = %d\n", rank, i, j, mya[i][j], myb[i][j]);
+			printf("RANK: %d, a[%d][%d] = %.2f, b = %.2f\n", rank, i, j, mya[i][j], myb[i][j]);
 		}
 	}
 	MPI_Finalize();
