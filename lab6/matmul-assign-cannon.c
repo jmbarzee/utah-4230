@@ -83,60 +83,60 @@ void main(int argc, char *argv[])
 	MPI_Scatterv(a, sendCount, displacments, blocktype, mya, recvCount, MPI_FLOAT, 0, commCart);
 	MPI_Scatterv(b, sendCount, displacments, blocktype, myb, recvCount, MPI_FLOAT, 0, commCart);
 
-	// Initilize myc
-	for (i = 0; i < SQRP; i++)
-	{
-		for (j = 0; j < SQRP; j++)
-		{
-			myc[i][j] = 0.0;
-		}
-	}
+	// // Initilize myc
+	// for (i = 0; i < SQRP; i++)
+	// {
+	// 	for (j = 0; j < SQRP; j++)
+	// 	{
+	// 		myc[i][j] = 0.0;
+	// 	}
+	// }
 
-	// Initialize Send for initial skew of a
-	int aSendCords[2] = {y, (x - y + 3) % 3};
-	int aSendRank;
-	int aSendCount = N * N / P;
-	MPI_Cart_rank(commCart, aSendCords, &aSendRank);
-	MPI_Isend(mya, aSendCount, MPI_FLOAT, aSendRank, 0, commCart, &sendreq);
+	// // Initialize Send for initial skew of a
+	// int aSendCords[2] = {y, (x - y + 3) % 3};
+	// int aSendRank;
+	// int aSendCount = N * N / P;
+	// MPI_Cart_rank(commCart, aSendCords, &aSendRank);
+	// MPI_Isend(mya, aSendCount, MPI_FLOAT, aSendRank, 0, commCart, &sendreq);
 
-	// Initialize Recv for initial skew of a
-	int aRecvCords[2] = {y, (x + y) % 3};
-	int aRecvRank;
-	MPI_Cart_rank(commCart, aRecvCords, &aRecvRank);
-	MPI_Irecv(mytmp, aSendCount, MPI_FLOAT, aRecvRank, 0, commCart, &rcvreq);
-	MPI_Wait(&rcvreq, &status);
+	// // Initialize Recv for initial skew of a
+	// int aRecvCords[2] = {y, (x + y) % 3};
+	// int aRecvRank;
+	// MPI_Cart_rank(commCart, aRecvCords, &aRecvRank);
+	// MPI_Irecv(mytmp, aSendCount, MPI_FLOAT, aRecvRank, 0, commCart, &rcvreq);
+	// MPI_Wait(&rcvreq, &status);
 
-	// Copy mya from mytmp (receive buffer)
-	for (i = 0; i < SQRP; i++)
-	{
-		for (j = 0; j < SQRP; j++)
-		{
-			mya[i][j] = mytmp[i][j];
-		}
-	}
+	// // Copy mya from mytmp (receive buffer)
+	// for (i = 0; i < SQRP; i++)
+	// {
+	// 	for (j = 0; j < SQRP; j++)
+	// 	{
+	// 		mya[i][j] = mytmp[i][j];
+	// 	}
+	// }
 
-	// Initialize Send for initial skew of b
-	int bSendCords[2] = {(y - x + 3) % 3, x};
-	int bSendRank;
-	int bSendCount = N * N / P;
-	MPI_Cart_rank(commCart, bSendCords, &bSendRank);
-	MPI_Isend(myb, bSendCount, MPI_FLOAT, bSendRank, 0, commCart, &sendreq);
+	// // Initialize Send for initial skew of b
+	// int bSendCords[2] = {(y - x + 3) % 3, x};
+	// int bSendRank;
+	// int bSendCount = N * N / P;
+	// MPI_Cart_rank(commCart, bSendCords, &bSendRank);
+	// MPI_Isend(myb, bSendCount, MPI_FLOAT, bSendRank, 0, commCart, &sendreq);
 
-	// Initialize Recv for initial skew of b
-	int bRecvCords[2] = {(y + x) % 3, x};
-	int bRecvRank;
-	MPI_Cart_rank(commCart, bRecvCords, &bRecvRank);
-	MPI_Irecv(mytmp, bSendCount, MPI_FLOAT, bRecvRank, 0, commCart, &rcvreq);
-	MPI_Wait(&rcvreq, &status);
+	// // Initialize Recv for initial skew of b
+	// int bRecvCords[2] = {(y + x) % 3, x};
+	// int bRecvRank;
+	// MPI_Cart_rank(commCart, bRecvCords, &bRecvRank);
+	// MPI_Irecv(mytmp, bSendCount, MPI_FLOAT, bRecvRank, 0, commCart, &rcvreq);
+	// MPI_Wait(&rcvreq, &status);
 
-	// Copy myb from mytmp (receive buffer)
-	for (i = 0; i < SQRP; i++)
-	{
-		for (j = 0; j < SQRP; j++)
-		{
-			myb[i][j] = mytmp[i][j];
-		}
-	}
+	// // Copy myb from mytmp (receive buffer)
+	// for (i = 0; i < SQRP; i++)
+	// {
+	// 	for (j = 0; j < SQRP; j++)
+	// 	{
+	// 		myb[i][j] = mytmp[i][j];
+	// 	}
+	// }
 
 	// // TODO: Add following loop:
 	// int q;
